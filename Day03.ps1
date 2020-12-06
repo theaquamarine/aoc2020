@@ -51,7 +51,7 @@ Describe "Day03" {
     }
 
     It "Solves Day03-1" {
-        Day03 (gc .\Day03-input.txt) -Slope '3,1' | Should -Be 223
+        Day03 (gc .\Day03.txt) -Slope '3,1' | Should -Be 223
     }
 
     It "Returns expected output for Day03-2" {
@@ -59,6 +59,6 @@ Describe "Day03" {
     }
 
     It "Solves Day03-2" {
-        Day03 (gc .\Day03-input.txt) -Slope $slopes | Should -Be 3517401300
+        Day03 (gc .\Day03.txt) -Slope $slopes | Should -Be 3517401300
     }
 }

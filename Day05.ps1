@@ -35,10 +35,10 @@ Describe "Day05-1" {
     }
 
     It "Solves Day05-1" {
-        Day05-1 (Get-Content .\Day05-input.txt) | Should -Be 832
+        Day05-1 (Get-Content .\Day05.txt) | Should -Be 832
     }
 
     It "Solves Day05-2" {
-        Day05-2 (Get-Content .\Day05-input.txt) | Should -Be 517
+        Day05-2 (Get-Content .\Day05.txt) | Should -Be 517
     }
 }

@@ -60,6 +60,6 @@ Describe "Day02-2" {
     }
 
     It "Solves Day02-2" {
-        Day02-2 (gc .\Day02-input.txt) | Should -Be 346
+        Day02-2 (gc .\Day02.txt) | Should -Be 346
     }
 }

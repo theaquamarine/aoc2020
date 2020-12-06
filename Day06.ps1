@@ -52,7 +52,7 @@ Describe "Day06-1" {
     }
     
     It "Solves Day06-1" {
-        $responses = (Get-Content .\Day06-input.txt -Raw) -split '\n\n' -replace '\n',' '
+        $responses = (Get-Content .\Day06.txt -Raw) -split '\n\n' -replace '\n',' '
         Day06-1 $responses | Should -Be 6748
     }
 }
@@ -64,7 +64,7 @@ Describe "Day06-2" {
     }
     
     It "Solves Day06-2" {
-        $responses = (Get-Content .\Day06-input.txt -Raw) -split '\n\n' #-replace '\n',' '
+        $responses = (Get-Content .\Day06.txt -Raw) -split '\n\n' #-replace '\n',' '
         Day06-2 $responses | Should -Be 3445
     }
 }

@@ -38,7 +38,7 @@ Describe "Day01-1" {
     }
 
     It "Solves Day01-1"{
-        Day01-1 (gc .\Day01-input.txt) | Should -Be 1020099
+        Day01-1 (gc .\Day01.txt) | Should -Be 1020099
     }
 }
 
@@ -49,6 +49,6 @@ Describe "Day01-2" {
     }
 
     It "Solves Day01-2"{
-        Day01-2 (gc .\Day01-input.txt) | Should -Be 49214880
+        Day01-2 (gc .\Day01.txt) | Should -Be 49214880
     }
 }

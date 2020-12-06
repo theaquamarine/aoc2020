@@ -50,7 +50,7 @@ Describe "Day04-1" {
     }
     
     It "Solves Day04-1" {
-        $passports = Get-Content .\Day04-input.txt -Raw
+        $passports = Get-Content .\Day04.txt -Raw
         $passports = $passports -split '\n\n' -replace '\n',' '
         Day04-1 $passports | Should -Be 196
     }
