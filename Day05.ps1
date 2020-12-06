@@ -1,15 +1,5 @@
-function ConvertTo-RowNumber ($row) {
-    [System.Convert]::ToInt32(($row -replace 'F',0 -replace 'B',1),2)
-}
-
-function ConvertTo-ColumnNumber ($col) {
-    [System.Convert]::ToInt32(($col -replace 'L',0 -replace 'R',1),2)
-}
-
 function ConvertTo-SeatID ($seat) {
-    $row = ConvertTo-RowNumber ($seat[0..6] -join '')
-    $col = ConvertTo-ColumnNumber ($seat[7..9] -join '')
-    $row * 8 + $col
+    [System.Convert]::ToInt32(($seat -replace 'F|L',0 -replace 'B|R',1),2)
 }
 
 function Day05-1 {
@@ -30,6 +20,7 @@ function Day05-2 {
     )
 
     $taken = $seats | % {ConvertTo-SeatID $_}
-    $free = 0..820 | ? {$_ -notin $taken}
-    $free | ? {($_ + 1) -in $taken } | ? {($_ - 1) -in $taken }
+    0..832 # All seats
+    | ? {$_ -notin $taken}
+    | ? {($_ + 1) -in $taken } | ? {($_ - 1) -in $taken } # Seats +/- 1 are taken
 }
