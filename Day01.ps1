@@ -1,3 +1,17 @@
+function Day01-1 {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [int[]] $PuzzleInput
+    )
+    
+    # foreach($i in $PuzzleInput) {
+    #     if ($PuzzleInput.Contains(2020-$i)) {$i * $target; break}
+    # }
+
+    $PuzzleInput | ? {$PuzzleInput.Contains(2020-$_)} | % {$_ * (2020-$_)} | Select -First 1
+}
+
 function Day01-2 {
     [CmdletBinding()]
     param (
@@ -15,6 +29,17 @@ function Day01-2 {
     }
 
     # $PuzzleInput | ? {$PuzzleInput.Contains(2020-$_)} | % {$_ * (2020-$_)} | Select -First 1
+}
+
+Describe "Day01-1" {
+    It "Returns expected output" {
+        $puzzleinput = 1721, 979, 366, 299, 675, 1456
+        Day01-1 $puzzleinput | Should -Be 514579
+    }
+
+    It "Solves Day01-1"{
+        Day01-1 (gc .\Day01-input.txt) | Should -Be 1020099
+    }
 }
 
 Describe "Day01-2" {
