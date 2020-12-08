@@ -31,72 +31,50 @@ function Day08-2 {
         [string[]] $instructions
     )
 
-    $current = 0
-    $accumulator = 0
-    $visited = @{}
+    function run ([string[]] $instruction) {
+        $current = 0
+        $accumulator = 0
+        $visited = @{}
+
+        while ($current -lt $instructions.Length) {
+            $function, $value = $instructions[$current] -split ' '
+            if ($null -ne $value) {$value = [int]($value -replace '\+')}
+            if ($visited[$current]) {$accumulator = 0; break}
+            else {$visited[$current] = $true}
+
+            switch ($function) {
+                'acc' {$accumulator += $value; $current++}
+                'jmp' {$current += $value}
+                'nop' {$current++}
+                Default {;}
+            }
+        }
+
+        $accumulator
+    }
 
     $nops = for ($i=0;$i -lt $instructions.Length; $i++) {if ($instructions[$i] -like 'nop*') {$i}}
-    $i = 0
-    while ($accumulator -le 0 -and $i -lt $nops.Length) {
+    for ($i = 0; $accumulator -le 0 -and $i -lt $nops.Length; $i++) {
         # replace each jmp with a nop and run to see if it exits
         Write-Debug "Replacing nop $i of $($nops.Length)"
         $instructions[$nops[$i]] = $instructions[$nops[$i]].replace('nop','jmp')
-        $current = 0
-        $visited = @{}
 
-        while ($current -lt $instructions.Length) {
-            $function, $value = $instructions[$current] -split ' '
-            if ($null -ne $value) {$value = [int]($value -replace '\+')}
-            if ($visited[$current]) {
-                $highest = $visited.Keys| sort | select -Last 1; 
-                Write-Debug "loop on $current : $function $value ; highest = $highest" 
-                $accumulator = 0
-                break}
-            else {$visited[$current] = $true}
-
-            switch ($function) {
-                'acc' {$accumulator += $value; $current++}
-                'jmp' {$target = $current + $value; if ($target -gt $instructions.Length) {Write-Output $accumulator; $current++ } else {$current = $target}}
-                'nop' {$current++}
-                Default {;}
-            }
-        }
+        $accumulator = run ($instructions)
 
         # put $instructions back as it was
         $instructions[$nops[$i]] = $instructions[$nops[$i]].replace('jmp','nop')
-        $i++
     }
 
     $jmps = for ($i=0;$i -lt $instructions.Length; $i++) {if ($instructions[$i] -like 'jmp*') {$i}}
-    $i = 0
-    while ($accumulator -le 0 -and $i -lt $jmps.Length) {
-        Write-Debug "Replacing jmp $i of $($jmps.Length)"
+    for ($i = 0; $accumulator -le 0 -and $i -lt $jmps.Length; $i++) {
         # replace each jmp with a nop and run to see if it exits
+        Write-Debug "Replacing jmp $i of $($jmps.Length)"
         $instructions[$jmps[$i]] = $instructions[$jmps[$i]].replace('jmp','nop')
-        $current = 0
-        $visited = @{}
 
-        while ($current -lt $instructions.Length) {
-            $function, $value = $instructions[$current] -split ' '
-            if ($null -ne $value) {$value = [int]($value -replace '\+')}
-            if ($visited[$current]) {
-                $highest = $visited.Keys| sort | select -Last 1; 
-                Write-Debug "loop on $current : $function $value ; highest = $highest" 
-                $accumulator = 0
-                break}
-            else {$visited[$current] = $true}
-
-            switch ($function) {
-                'acc' {$accumulator += $value; $current++}
-                'jmp' {$target = $current + $value; if ($target -gt $instructions.Length) {Write-Output $accumulator; $current++ } else {$current = $target}}
-                'nop' {$current++}
-                Default {;}
-            }
-        }
+        $accumulator = run ($instructions)
 
         # put $instructions back as it was
         $instructions[$jmps[$i]] = $instructions[$jmps[$i]].replace('nop','jmp')
-        $i++
     }
 
     Write-Output $accumulator
