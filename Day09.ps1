@@ -44,10 +44,22 @@ function Day09-2 {
     [CmdletBinding()]
     param (
         [Parameter()]
-        [string[]] $PuzzleInput
+        [int64[]] $PuzzleInput,
+        [Parameter()]
+        $Target
     )
 
-    throw [NotImplementedException]'Day09-2 is not implemented.'
+    :outer for ($start = 0; $start -lt $PuzzleInput.Length; $start++) {
+        $acc = 0
+        for ($current = $start; $current -lt $puzzleinput.Length -and $acc -lt $target; $current++) {
+            $acc += $PuzzleInput[$current]
+            if ($acc -eq $target) { 
+                $range = $PuzzleInput[$start..$current] | Sort-Object
+                Write-Output ($range[0] + $range[-1])
+                break outer
+            }
+        }
+    }
 }
 
 # $DebugPreference = 'Continue'
@@ -86,13 +98,13 @@ Describe "Day09-1" {
     }
 }
 
-# Describe "Day09-2" {
-#     It "Returns expected output" {
-#         Day09-2 ($puzzleinput -split '\r?\n') | Should -Be 'EXPECTED_OUTPUT'
-#     }
+Describe "Day09-2" {
+    It "Returns expected output" {
+        Day09-2 ($puzzleinput -split '\r?\n') -Target 127 | Should -Be 62
+    }
     
-#     It "Solves Day09-2" {
-#         $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
-#         Day09-2 $puzzleinput | Should -Be "YOUR_EXPECTED_VALUE"
-#     }
-# }
+    It "Solves Day09-2" {
+        $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
+        Day09-2 $puzzleinput 1504371145 | Should -Be 183278487
+    }
+}
