@@ -31,10 +31,25 @@ function Day10-2 {
     [CmdletBinding()]
     param (
         [Parameter()]
-        [string[]] $PuzzleInput
+        [int[]] $PuzzleInput
     )
 
-    throw [NotImplementedException]'Day10-2 is not implemented.'
+    $outlet = 0
+    $device = ($PuzzleInput | Sort -Descending)[0] + 3
+    $joltages = @($outlet,$device)+$PuzzleInput | sort
+    $count = @{}
+    $joltages | % {$count[$_] = 0}
+    $count[$device] = 1
+
+    # iterate BACKWARDS, counting paths in a dag
+    for ($i=$joltages.Length-1; $i -ge 0; $i--) {
+        $joltage = $joltages[$i]
+        $count[$joltage] += $count[$joltage+1]
+        $count[$joltage] += $count[$joltage+2]
+        $count[$joltage] += $count[$joltage+3]
+    }
+
+    Write-Output $count[$outlet]
 }
 
 # $DebugPreference = 'Continue'
@@ -101,13 +116,50 @@ Describe "Day10-1" {
     }
 }
 
-# Describe "Day10-2" {
-#     It "Returns expected output" {
-#         Day10-2 ($puzzleinput -split '\r?\n') | Should -Be 'EXPECTED_OUTPUT'
-#     }
+Describe "Day10-2" {
+    It "Returns expected output" {
+        Day10-2 ($puzzleinput -split '\r?\n') | Should -Be 8
+    }
     
-#     It "Solves Day10-2" {
-#         $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
-#         Day10-2 $puzzleinput | Should -Be "YOUR_EXPECTED_VALUE"
-#     }
-# }
+    It "Returns expected output 2" {
+        $puzzleinput = @"
+28
+33
+18
+42
+31
+14
+46
+20
+48
+47
+24
+23
+49
+45
+19
+38
+39
+11
+1
+32
+25
+35
+8
+17
+7
+9
+4
+2
+34
+10
+3
+"@
+        Day10-2 ($puzzleinput -split '\r?\n') | Should -Be 19208
+    }
+    
+    It "Solves Day10-2" {
+        $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
+        Day10-2 $puzzleinput | Should -Be 6908379398144
+    }
+}
