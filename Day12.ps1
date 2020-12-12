@@ -57,7 +57,43 @@ function Day12-2 {
         [string[]] $PuzzleInput
     )
 
-    throw [NotImplementedException]'Day12-2 is not implemented.'
+    $shipx = 0
+    $shipy = 0
+    $waypointoffset = 10,1
+    $facing = 'east'
+
+    function TurnLeft ([int]$amount) {
+        $x = $waypointoffset[0]
+        $y = $waypointoffset[1]
+        $rads = $amount * [math]::PI / 180
+        $newx = [math]::round($x * [math]::Cos($rads) - $y * [math]::sin($rads))
+        $newy = [math]::round($x * [math]::sin($rads) + $y * [math]::Cos($rads))
+        Write-Debug "Rotating $x,$y ccw by $amount -> $newx,$newy"
+        ($newx,$newy)
+    }
+
+    function TurnRight ([int]$amount) {
+        TurnLeft (-1 * $amount)
+    }
+    
+    foreach ($instruction in $PuzzleInput) {
+        $instruction -match '(?<action>\w)(?<value>\d+)' | out-null
+        switch ($matches.action) {
+            'n' {$waypointoffset[1] += $matches.value}
+            's' {$waypointoffset[1] -= $matches.value}
+            'e' {$waypointoffset[0] += $matches.value}
+            'w' {$waypointoffset[0] -= $matches.value}
+            'l' {$waypointoffset = TurnLeft $matches.value}
+            'r' {$waypointoffset = TurnRight $matches.value}
+            'f' {
+                $shipx += $waypointoffset[0] * $matches.value
+                $shipy += $waypointoffset[1] * $matches.value
+            }
+        }
+        Write-Debug ("$instruction : {0} {1} : now at $shipx,$shipy waypoint {2},{3}" -f $matches.action, $matches.value, $waypointoffset[0], $waypointoffset[1])
+    }
+
+    Write-Output ([System.Math]::Abs($shipx) + [System.Math]::Abs($shipy))
 }
 
 # $DebugPreference = 'Continue'
@@ -81,13 +117,13 @@ Describe "Day12-1" {
     }
 }
 
-# Describe "Day12-2" {
-#     It "Returns expected output" {
-#         Day12-2 ($puzzleinput -split '\r?\n') | Should -Be 'EXPECTED_OUTPUT'
-#     }
+Describe "Day12-2" {
+    It "Returns expected output" {
+        Day12-2 ($puzzleinput -split '\r?\n') | Should -Be 286
+    }
     
-#     It "Solves Day12-2" {
-#         $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
-#         Day12-2 $puzzleinput | Should -Be "YOUR_EXPECTED_VALUE"
-#     }
-# }
+    It "Solves Day12-2" {
+        $puzzleinput = Get-Content ($PSCommandPath.Replace('.ps1', '.txt'))
+        Day12-2 $puzzleinput | Should -Be 101860
+    }
+}
